@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace SyncLesson
@@ -7,15 +8,46 @@ namespace SyncLesson
     {
         static void Main(string[] args)
         {
-            var account = new Account();
-            for(int i = 0; i < 100; i++)
+            List<Account> account = new List<Account> {
+            new Account
             {
-                if(i % 2 == 0) 
-                    ThreadPool.QueueUserWorkItem(account.ProcessMoney, 100);
-                else
-                    ThreadPool.QueueUserWorkItem(account.ProcessMoney, -100);
+                Name = "Алихан"
+            },
+            new Account
+            {
+                Name = "Бекзат"
+            },
+            new Account
+            {
+                Name = "Наиль"
+            },
+            new Account
+            {
+                Name = "Борис"
+            }
+            };
+            Random rnd = new Random();
+            int vybor = rnd.Next(0, 2);
+            int index = rnd.Next(0, 4);
+            for(int i = 0; i < 1000; i++)
+            {
+                if (vybor == 0)
+                {
+                    lock (account)
+                    {
+                        ThreadPool.QueueUserWorkItem(account[index], 100);
+                    }
+                }
+                else if(vybor == 1)
+                {
+                    lock (account)
+                    {
+                        ThreadPool.QueueUserWorkItem(account[index], -100);
+                    }
+                }
                 Thread.Sleep(5);
             }
+
             Console.ReadLine();
         }
     }
