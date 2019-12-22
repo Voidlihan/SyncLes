@@ -8,46 +8,35 @@ namespace SyncLesson
     {
         static void Main(string[] args)
         {
-            List<Account> account = new List<Account> {
+            var account = new List<Account> {
             new Account
             {
                 Name = "Алихан"
             },
             new Account
             {
+                Name = "Тамерлан"
+            },
+            new Account
+            {
                 Name = "Бекзат"
             },
-            new Account
-            {
-                Name = "Наиль"
-            },
-            new Account
-            {
-                Name = "Борис"
-            }
             };
-            Random rnd = new Random();
-            int vybor = rnd.Next(0, 2);
-            int index = rnd.Next(0, 4);
+            Random changeRand = new Random();
+            Random ixRand = new Random();
+            int changes = changeRand.Next(0, 2);
+            int ix = ixRand.Next(0, 3);
             for(int i = 0; i < 1000; i++)
             {
-                if (vybor == 0)
+                if (changes == 0)
                 {
-                    lock (account)
-                    {
-                        ThreadPool.QueueUserWorkItem(account[index], 100);
-                    }
+                    ThreadPool.QueueUserWorkItem(account[ix].ProcessMoney, 100);
                 }
-                else if(vybor == 1)
+                else if(changes == 1)
                 {
-                    lock (account)
-                    {
-                        ThreadPool.QueueUserWorkItem(account[index], -100);
-                    }
+                    ThreadPool.QueueUserWorkItem(account[ix].ProcessMoney, -100);                    
                 }
-                Thread.Sleep(5);
             }
-
             Console.ReadLine();
         }
     }
